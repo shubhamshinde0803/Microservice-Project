@@ -8,6 +8,12 @@ spring:
       server:
         native:
           search-locations: classpath:/configurations
+eureka:
+  instance:
+    hostname: config-service
+  client:
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
 
 server:
   port: 8888

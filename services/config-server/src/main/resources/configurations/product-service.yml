@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/product
+    url: jdbc:postgresql://ms_pg_sql:5432/product
     username: shubham
     password: shubham
     driver-class-name: org.postgresql.Driver
@@ -16,5 +16,11 @@ spring:
     baseline-version: 0
     user: ${spring.datasource.username}
     password: ${spring.datasource.password}
+eureka:
+  instance:
+    hostname: product-service
+  client:
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
 server:
   port: 8050

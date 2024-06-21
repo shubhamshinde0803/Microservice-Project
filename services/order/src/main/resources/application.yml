@@ -1,6 +1,10 @@
 spring:
+  profiles:
+    active: native
   application:
     name: order-service
   config:
-    import: optional:configserver:http://localhost:8888
-
+    import: optional:configserver:http://ms_config_service:8888
+    customer-url: http://gateway-service:8222/api/v1/customer
+    product-url: http://gateway-service:8222/api/v1/products
+    payment-url: http://gateway-service:8222/api/v1/payments

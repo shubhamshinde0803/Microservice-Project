@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/payment
+    url: jdbc:postgresql://ms_pg_sql:5432/payment
     username: shubham
     password: shubham
     driver-class-name: org.postgresql.Driver
@@ -11,11 +11,16 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   kafka:
     producer:
-      bootstrap-servers: localhost:9092
+      bootstrap-servers: payment-service:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
         spring.json.type.mapping: paymentConfirmation:com.shubham.ecommerce.notification.PaymentNotificationRequest
-
+eureka:
+  instance:
+    hostname: payment-service
+  client:
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
 server:
   port: 8060

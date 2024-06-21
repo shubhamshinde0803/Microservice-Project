@@ -3,13 +3,13 @@ spring:
     mongodb:
       username: shubham
       password: shubham
-      host: localhost
+      host: ms_mongo_db
       port: 27017
-      database: customer
+      database: notification
       authentication-database: admin
   kafka:
     consumer:
-      bootstrap-servers: localhost:9092
+      bootstrap-servers: notification-service:9092
       group-id: paymentGroup, orderGroup
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -18,7 +18,7 @@ spring:
         spring.json.trusted.packages: '*'
         spring.json.type.mapping: orderConfirmation:com.shubham.ecommerce.kafka.order.OrderConfirmation, paymentConfirmation:com.shubham.ecommerce.kafka.payment.PaymentConfirmation
   mail:
-    host: localhost
+    host: ms_mail_dev
     port: 1025
     username: shubham
     password: shubham
@@ -32,6 +32,13 @@ spring:
         connectiontimeout: 5000
         timeout: 3000
         writetimeout: 5000
-
+eureka:
+  instance:
+    hostname: notification-service
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
 server:
   port: 8040

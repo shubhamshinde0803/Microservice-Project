@@ -36,7 +36,7 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - mongo:/data
+      - mongo:/data/db
     environment:
       - MONGO_INITDB_ROOT_USERNAME=shubham
       - MONGO_INITDB_ROOT_PASSWORD=shubham
@@ -87,6 +87,130 @@ services:
     ports:
       - 1080:1080
       - 1025:1025
+
+  config-service:
+    container_name: ms_config_service
+    image: config-service:latest
+    build:
+      context: ./services/config-server
+      dockerfile: Dockerfile
+    ports:
+      - 8888:8888
+    networks:
+      - microservices-net
+    depends_on:
+      - postgres
+
+  discovery-service:
+    image: discovery-service:latest
+    build:
+      context: ./services/discovery
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+    networks:
+      - microservices-net
+    depends_on:
+      - config-service
+
+  customer-service:
+    image: customer-service:latest
+    build:
+      context: ./services/customer
+      dockerfile: Dockerfile
+    ports:
+      - "8090:8090"
+    networks:
+      - microservices-net
+    environment:
+      - SPRING_PROFILES_ACTIVE=native
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+    depends_on:
+      - config-service
+      - discovery-service
+      - mongodb
+
+  gateway-service:
+    build:
+      context: ./services/gateway
+      dockerfile: Dockerfile
+    image: gateway-service:latest
+    ports:
+      - "8222:8222"
+    networks:
+      - microservices-net
+    depends_on:
+      - config-service
+      - discovery-service
+
+  notification-service:
+    build:
+      context: ./services/notification
+      dockerfile: Dockerfile
+    image: notification-service:latest
+    ports:
+      - "8040:8040"
+    networks:
+      - microservices-net
+    depends_on:
+      - config-service
+      - mongodb
+      - kafka
+
+  order-service:
+    build:
+      context: ./services/order
+      dockerfile: Dockerfile
+    image: order-service:latest
+    ports:
+      - "8070:8070"
+    networks:
+      - microservices-net
+    environment:
+      - SPRING_PROFILES_ACTIVE=native
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+    depends_on:
+      - config-service
+      - discovery-service
+      - postgres
+      - kafka
+
+  payment-service:
+    build:
+      context: ./services/payment
+      dockerfile: Dockerfile
+    image: payment-service:latest
+    ports:
+      - "8060:8060"
+    networks:
+      - microservices-net
+    environment:
+      - SPRING_PROFILES_ACTIVE=native
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+    depends_on:
+      - config-service
+      - discovery-service
+      - postgres
+      - kafka
+      - order-service
+
+  product-service:
+    build:
+      context: ./services/product
+      dockerfile: Dockerfile
+    image: product-service:latest
+    ports:
+      - "8050:8050"
+    networks:
+      - microservices-net
+    environment:
+      - SPRING_PROFILES_ACTIVE=native
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+    depends_on:
+      - config-service
+      - discovery-service
+      - postgres
+      - order-service
 
 networks:
   microservices-net:

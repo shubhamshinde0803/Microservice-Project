@@ -25,6 +25,11 @@ spring:
           uri: lb:http://PAYMENT-SERVICE
           predicates:
             - Path=/api/v1/payments/**
-
+eureka:
+  instance:
+    hostname: gateway-service
+  client:
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
 server:
   port: 8222

@@ -18,8 +18,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequiredArgsConstructor
 public class ProductClient {
 
-    @Value("${application.config.product-url}")
-    private String productUrl;
+//    @Value("${application.config.product-url}")
+//    private String productUrl;
+    private final String productUrl = "http://gateway-service:8222/api/v1/products";
     private final RestTemplate restTemplate;
 
     public List<PurchaseResponse> purchaseProducts(List<PurchaseRequest> requestBody) {

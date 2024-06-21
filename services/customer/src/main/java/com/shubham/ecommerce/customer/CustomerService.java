@@ -43,6 +43,7 @@ public class CustomerService {
         if(request.address() != null){
             customer.setAddress(request.address());
         }
+        repository.save(customer);
     }
 
     public List<CustomerResponse> findAllCustomers() {
