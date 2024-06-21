@@ -4,6 +4,6 @@ WORKDIR /app
 
 COPY target/customer-0.0.1-SNAPSHOT.jar /app/customer.jar
 
-EXPOSE 8080
+EXPOSE 8090
 
 CMD ["java", "-jar", "customer.jar"]
