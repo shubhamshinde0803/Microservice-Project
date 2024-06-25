@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: native
   config:
     import: optional:configserver:http://ms_config_service:8888
   application:
